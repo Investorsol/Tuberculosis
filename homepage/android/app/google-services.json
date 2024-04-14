@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "740350801767",
+    "project_id": "tb-connect-b4ea7",
+    "storage_bucket": "tb-connect-b4ea7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:740350801767:android:0bae06524b250676a6e1c2",
+        "android_client_info": {
+          "package_name": "com.example.homepage"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDuZLJrBxf2_QSBAZuogvumtAFYApZ0ofo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
