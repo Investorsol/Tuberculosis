@@ -194,7 +194,26 @@ class SignUpScreen extends StatelessWidget {
                       );
                       return;
                     }
-
+                                               if (password.length < 6) {
+                                                 Navigator.of(context).pop(); 
+      // Show password length error message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.red,
+          elevation: 6,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+          content: const Text(
+            'Password must be at least 6 characters long',
+            style: TextStyle(color: Colors.white),
+          ),
+          duration: const Duration(seconds: 3),
+        ),
+      );
+      return; // Exit onPressed callback
+    }
                     if (password != confirmPassword) {
                       Navigator.of(context).pop(); // Close the dialog
                       showDialog(

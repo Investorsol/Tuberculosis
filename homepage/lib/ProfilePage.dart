@@ -80,7 +80,7 @@ class _ProfileTabState extends State<ProfilePage> {
                             const Center(
                               child: CircleAvatar(
                                 radius: 50,
-                                backgroundImage: AssetImage('assets/images/person_icon.png'), // Add your image asset here
+                                backgroundImage: AssetImage("image/solo.jpeg"), // Add your image asset here
                               ),
                             ),
                             const SizedBox(height: 20),

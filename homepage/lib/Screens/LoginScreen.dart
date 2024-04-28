@@ -128,7 +128,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     children: [
                                       const CircularProgressIndicator( valueColor: AlwaysStoppedAnimation<Color>(Colors.green),),
                                       const SizedBox(width: 20),
-                                      Text("Logging in..."),
+                                      Text("Signing in..."),
                                     ],
                                   ),
                                 ),
@@ -151,7 +151,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             passwordtext.clear();
                                Navigator.of(context).pop();
                             // Navigate to HomePage after successful login
-                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomePage(userID: userNameID, userPosition: position)));
+                           Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => HomePage(userID: userNameID, userPosition: position)));
 
                             // Show successful login message
                             ScaffoldMessenger.of(context).showSnackBar(

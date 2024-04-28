@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:homepage/HighRiskTuberculosisPage.dart';
 
 void main() {
   runApp(const MyApp());
@@ -53,7 +54,7 @@ class _QuestionnairePageState extends State<QuestionnairePage> with SingleTicker
             indicatorColor: Colors.green,
             tabs: const [
               Tab(text: 'Risk Assessment'),
-              Tab(text: 'Support Assessment'),
+              Tab(text: ' Drugs Adherence '),
             ],
           ),
           Expanded(
@@ -228,47 +229,82 @@ void _showResultDialog(String riskLevel) {
   Color textColor;
   switch (riskLevel.toLowerCase()) {
     case 'high':
+    case 'very high':
       textColor = Colors.red;
-      break;
-      case 'very high':
-      textColor = Colors.red;
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Risk Assessment Result'),
+            content: Text(
+              '$riskLevel.',
+              style: TextStyle(
+                color: textColor,
+                fontSize: 20,
+              ),
+            ),
+            actions: [
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context); // Close the dialog
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => HighRiskTuberculosisPage(userID: widget.userID,)),
+                    );
+                  
+                },
+                child: const Text('Continue'),
+              ),
+            ],
+          );
+        },
+      );
       break;
     case 'low':
-      textColor = Colors.green;
-      break;
-       case 'very low':
-      textColor = Colors.green;
-      break;
+    case 'very low':
     case 'moderate':
-      textColor = Colors.orange;
+      textColor = Colors.green;
+   showDialog(
+  context: context,
+  builder: (BuildContext context) {
+    return AlertDialog(
+      title: const Text('Risk Assessment Result'),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '$riskLevel.',
+            style: TextStyle(
+              color: textColor,
+              fontSize: 20,
+            ),
+          ),
+          SizedBox(height: 10), // Add some space between the two Text widgets
+          Text(
+            'Join TB Communities now, and learn how to prevent TB',
+            style: TextStyle(
+              fontSize: 16,
+            ),
+          ),
+        ],
+      ),
+      actions: [
+        ElevatedButton(
+          onPressed: () {
+            Navigator.pop(context); // Close the dialog
+          },
+          child: const Text('Close'),
+        ),
+      ],
+    );
+  },
+);
+;
       break;
     default:
       textColor = Colors.black;
   }
-
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: const Text('Risk Assessment Result'),
-        content: Text(
-          '$riskLevel.',
-          style: TextStyle(
-            color: textColor,
-            fontSize: 20
-          ),
-        ),
-        actions: [
-          ElevatedButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: const Text('Close'),
-          ),
-        ],
-      );
-    },
-  );
 }
 
 
@@ -390,7 +426,7 @@ class SocialSupportQuestionnaireTab extends StatefulWidget {
 
 class _SocialSupportQuestionnaireTabState
     extends State<SocialSupportQuestionnaireTab> {
-  late final List<String?> _selectedOptions = List.filled(5, null);
+  late final List<String?> _selectedOptions = List.filled(8, null);
   late TextEditingController _userIdController;
 
   @override
@@ -417,14 +453,17 @@ class _SocialSupportQuestionnaireTabState
       // Save support assessment results to Firestore
       if(widget.userPosition == 'vht'){
       FirebaseFirestore.instance.collection('SupportAssessment').add({
-        'user_id': username, // Include user ID in the data
-        'community_health_workers': _selectedOptions[0],
-        'support_groups': _selectedOptions[1],
-        'financial_assistance_programs': _selectedOptions[2],
-        'psycho_social_counseling_services': _selectedOptions[3],
-        'home_based_care_services': _selectedOptions[4],
-        'timestamp': Timestamp.now(),
+       'user_id': username, // Include user ID in the data
+        'tuberculosis_medication': _selectedOptions[0],
+        'other_disease': _selectedOptions[1],
+        'tablets_side_effects': _selectedOptions[2],
+        'missed_dozes': _selectedOptions[3],
+        'medication_improvement': _selectedOptions[4],
+        'treatment_hinderance': _selectedOptions[5],
+         'received_counselling': _selectedOptions[6],
+         'guidance&counselling_help': _selectedOptions[7],
         'vht': widget.userID,
+        'timestamp': Timestamp.now(),
       }).then((value) {
         // Display success message
         showDialog(
@@ -469,11 +508,14 @@ class _SocialSupportQuestionnaireTabState
       }else{
          FirebaseFirestore.instance.collection('SupportAssessment').add({
         'user_id': username, // Include user ID in the data
-        'community_health_workers': _selectedOptions[0],
-        'support_groups': _selectedOptions[1],
-        'financial_assistance_programs': _selectedOptions[2],
-        'psycho_social_counseling_services': _selectedOptions[3],
-        'home_based_care_services': _selectedOptions[4],
+        'tuberculosis_medication': _selectedOptions[0],
+        'other_disease': _selectedOptions[1],
+        'tablets_side_effects': _selectedOptions[2],
+        'missed_dozes': _selectedOptions[3],
+        'medication_improvement': _selectedOptions[4],
+        'treatment_hinderance': _selectedOptions[5],
+         'received_counselling': _selectedOptions[6],
+         'guidance&counselling_help': _selectedOptions[7],
         'timestamp': Timestamp.now(),
       }).then((value) {
         // Display success message
@@ -587,8 +629,8 @@ class _SocialSupportQuestionnaireTabState
             ),
             const SizedBox(height: 20),
             SocialSupportQuestionWidget(
-              question: 'Community Health Workers',
-              answers: const ['Worse', 'Not Good', 'Good', 'Very Good'],
+              question: 'Are you on any Tuberculosis medication',
+              answers: const ['Yes', 'No'],
               onChanged: (value) {
                 setState(() {
                   _selectedOptions[0] = value;
@@ -596,8 +638,8 @@ class _SocialSupportQuestionnaireTabState
               },
             ),
             SocialSupportQuestionWidget(
-              question: 'Support Groups',
-              answers: const ['Worse', 'Not Good', 'Good', 'Very Good'],
+              question: 'Do you have any other diseases aprt from tuberculosis',
+              answers: const ['Yes', 'No'],
               onChanged: (value) {
                 setState(() {
                   _selectedOptions[1] = value;
@@ -605,8 +647,8 @@ class _SocialSupportQuestionnaireTabState
               },
             ),
             SocialSupportQuestionWidget(
-              question: 'Financial Assistance Programs',
-              answers: const ['Worse', 'Not Good', 'Good', 'Very Good'],
+              question: 'Do you get side effects from tablets being taken',
+              answers: const ['Yes', 'No'],
               onChanged: (value) {
                 setState(() {
                   _selectedOptions[2] = value;
@@ -614,8 +656,8 @@ class _SocialSupportQuestionnaireTabState
               },
             ),
             SocialSupportQuestionWidget(
-              question: 'Psycho-social Counseling Services',
-              answers: const ['Worse', 'Not Good', 'Good', 'Very Good'],
+              question: 'Have you missed any dozes',
+              answers: const ['Yes', 'No'],
               onChanged: (value) {
                 setState(() {
                   _selectedOptions[3] = value;
@@ -623,11 +665,38 @@ class _SocialSupportQuestionnaireTabState
               },
             ),
             SocialSupportQuestionWidget(
-              question: 'Home-Based Care Services',
-              answers: const ['Worse', 'Not Good', 'Good', 'Very Good'],
+              question: 'Are you experiencing any improvement from the medication',
+              answers: const ['Yes', 'No'],
               onChanged: (value) {
                 setState(() {
                   _selectedOptions[4] = value;
+                });
+              },
+            ),
+            SocialSupportQuestionWidget(
+              question: 'Dou you have any other challenges that can hinder you from Tuberculosis treatment',
+              answers: const ['Yes', 'No'],
+              onChanged: (value) {
+                setState(() {
+                  _selectedOptions[5] = value;
+                });
+              },
+            ),
+            SocialSupportQuestionWidget(
+              question: 'Have you heard any guidance an counselling',
+              answers: const ['Yes', 'No', ],
+              onChanged: (value) {
+                setState(() {
+                  _selectedOptions[6] = value;
+                });
+              },
+            ),
+            SocialSupportQuestionWidget(
+              question: 'Did the guidance and counselling help you during your medication',
+              answers: const ['Yes', 'No'],
+              onChanged: (value) {
+                setState(() {
+                  _selectedOptions[7] = value;
                 });
               },
             ),
